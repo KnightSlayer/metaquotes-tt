@@ -1,6 +1,5 @@
 import { history } from "../router/history";
-
-const myUuid = () => btoa(Math.random().toString());
+import { myUuid } from "../utils";
 
 type Render = ((elem: HTMLElement) => void) | undefined;
 type SlotName = "main" | "footer";
@@ -44,6 +43,7 @@ export const renderMainLayout = (elem: HTMLElement, slots: Slots) => {
   // insert slots from arguments;
   Object.entries(slotRenderMap).forEach(([slotName, elemId]) => {
     const slotElem = document.getElementById(elemId) as HTMLElement;
+    slotElem.attributes.removeNamedItem('id');
     // @ts-ignore
     const render = slots[slotName] as Render;
 

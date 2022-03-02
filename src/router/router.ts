@@ -1,5 +1,5 @@
 import { renderMainLayout } from "../layouts/mainLayout";
-import { renderMain, mainPath } from "../pages/index";
+import { renderMain, mainPath } from "../pages/main";
 import { renderAbout, aboutPath } from "../pages/about";
 import { render404 } from "../pages/404";
 import { history } from "./history";
