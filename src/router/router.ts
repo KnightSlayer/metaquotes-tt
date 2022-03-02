@@ -3,6 +3,7 @@ import { renderMain, mainPath } from "../pages/main";
 import { renderAbout, aboutPath } from "../pages/about";
 import { render404 } from "../pages/404";
 import { history } from "./history";
+import { onUnmount } from "../common/onUnmount";
 
 export const renderRouter = (elem: HTMLElement) => {
   reredner(elem);
@@ -18,6 +19,7 @@ const pathPageMap = {
 let previousPathname: string;
 const reredner = (elem: HTMLElement) => {
   if (previousPathname === window.location.pathname) return;
+  onUnmount(elem);
   previousPathname = window.location.pathname;
 
   // @ts-ignore

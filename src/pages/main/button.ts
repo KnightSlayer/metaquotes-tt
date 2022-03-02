@@ -2,6 +2,7 @@ import './button.css'
 import { GraphType, paramNames } from "./constants";
 import { queryParam } from "../../router/queryParam";
 import { getGraphType } from "./state";
+import { addOnMountCb } from "../../common/onUnmount";
 
 export const initButton = (id: string, graph: GraphType ) => {
   const button = document.getElementById(id)!;
@@ -9,12 +10,13 @@ export const initButton = (id: string, graph: GraphType ) => {
   button.onclick = () => queryParam(paramNames.GRAPH).set(graph);
   button.classList.add('button');
 
-  // todo: clear somewhere
-  queryParam(paramNames.GRAPH).sync((value) => {
+  const clearCb = queryParam(paramNames.GRAPH).sync((value) => {
     if (getGraphType(value) === graph) {
       button.classList.add('--active');
     } else {
       button.classList.remove('--active');
     }
-  })
+  });
+
+  addOnMountCb(button, clearCb);
 }

@@ -1,6 +1,7 @@
 import { queryParam } from "../../router/queryParam";
 import { paramNames } from "./constants";
 import { getYearFrom, getYearTo, getGraphType } from "./state";
+import { addOnMountCb } from "../../common/onUnmount";
 
 function render(elem: HTMLElement) {
   const from = getYearFrom();
@@ -20,7 +21,10 @@ export const initCanvas = (id: string) => {
   elem.attributes.removeNamedItem('id');
   render(elem);
 
-  // todo: clear somewhere
   Object.values(paramNames)
-    .forEach(paramName => queryParam(paramName).onChange(() => render(elem)));
+    .forEach(paramName => {
+      const clearCb = queryParam(paramName).onChange(() => render(elem));
+
+      addOnMountCb(elem, clearCb);
+    });
 }
