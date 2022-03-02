@@ -15,7 +15,11 @@ const pathPageMap = {
   [aboutPath]: renderAbout,
 }
 
+let previousPathname: string;
 const reredner = (elem: HTMLElement) => {
+  if (previousPathname === window.location.pathname) return;
+  previousPathname = window.location.pathname;
+
   // @ts-ignore
   const renderMain = pathPageMap[window.location.pathname] || render404;
 
