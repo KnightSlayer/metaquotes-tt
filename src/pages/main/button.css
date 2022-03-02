@@ -1,0 +1,7 @@
+/* BEM */
+.button {
+  border-width: 1px;
+}
+.button.--active {
+  border-width: 2px;
+}

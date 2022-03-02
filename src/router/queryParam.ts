@@ -6,6 +6,22 @@ function getValue(paramName: string) {
   return urlObj.searchParams.get(paramName);
 }
 
+type Cb = (v: string | null) => void;
+
+function onChangeValue(paramName: string, cb: Function) {
+  let previousValue = getValue(paramName);
+
+  return history.subscribe(() => {
+    const newValue = getValue(paramName);
+
+    if (newValue === previousValue) return;
+
+    previousValue = newValue;
+    cb(newValue);
+  });
+
+}
+
 export const queryParam = (paramName: string) => ({
   get: () => getValue(paramName),
   set(value: string) {
@@ -15,16 +31,10 @@ export const queryParam = (paramName: string) => ({
 
     history.push(urlObj.href);
   },
-  onChange(cb: Function) {
-    let previousValue = getValue(paramName);
-
-    return history.subscribe(() => {
-      const newValue = getValue(paramName);
-
-      if (newValue === previousValue) return;
-
-      previousValue = newValue;
-      cb(newValue);
-    });
-  },
+  onChange: (cb: Cb) => onChangeValue(paramName, cb),
+  // same as onChange but also call cb immediately with current value;
+  sync: (cb: Cb) => {
+    cb(getValue(paramName));
+    return onChangeValue(paramName, cb);
+  }
 })
