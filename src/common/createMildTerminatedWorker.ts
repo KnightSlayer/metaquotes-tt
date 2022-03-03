@@ -1,5 +1,6 @@
 // return object with same signature as worker instance
 // the difference is that after termination a new instance will be created
+// I didn't spend time to set correct TS types in this file
 export const createMildTerminatedWorker = (RegularWorker: any) => {
   let worker = new RegularWorker();
 
