@@ -4,8 +4,9 @@ import { getYearFrom, getYearTo, getGraphType } from "./state";
 import { addOnMountCb } from "../../common/onUnmount";
 import GraphWorker from "../../web-workers/graphWorker?worker"
 import { mainPath } from "./index";
+import { createMildTerminatedWorker } from "../../common/createMildTerminatedWorker";
 
-let graphWorker = new GraphWorker()
+let graphWorker = createMildTerminatedWorker(GraphWorker);
 
 function render(elem: HTMLElement) {
   if (window.location.pathname !== mainPath) return;
@@ -14,8 +15,7 @@ function render(elem: HTMLElement) {
   const to = getYearTo();
   const graph = getGraphType();
 
-  // graphWorker.terminate();
-  // graphWorker = new GraphWorker();
+  graphWorker.terminate();
   graphWorker.postMessage({from, to, graph});
 
   elem.innerHTML = `
