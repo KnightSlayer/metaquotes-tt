@@ -1,5 +1,5 @@
 import { GraphType, graphTypes, paramNames, years } from "./constants";
-import { queryParam } from "../../router/queryParam";
+import { queryParam } from "../../common/queryParam";
 
 const getYear = (year: string | null, defaultValue: string) => {
   if (!year) return defaultValue;

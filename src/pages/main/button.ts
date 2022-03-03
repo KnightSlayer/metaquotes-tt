@@ -1,6 +1,6 @@
 import './button.css'
 import { GraphType, paramNames } from "./constants";
-import { queryParam } from "../../router/queryParam";
+import { queryParam } from "../../common/queryParam";
 import { getGraphType } from "./state";
 import { addOnMountCb } from "../../common/onUnmount";
 

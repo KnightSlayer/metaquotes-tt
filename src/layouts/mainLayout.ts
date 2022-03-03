@@ -1,4 +1,4 @@
-import { history } from "../router/history";
+import { history } from "../common/history";
 import { myUuid } from "../utils";
 
 type Render = ((elem: HTMLElement) => void) | undefined;

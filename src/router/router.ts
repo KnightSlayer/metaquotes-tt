@@ -2,7 +2,7 @@ import { renderMainLayout } from "../layouts/mainLayout";
 import { renderMain, mainPath } from "../pages/main";
 import { renderAbout, aboutPath } from "../pages/about";
 import { render404 } from "../pages/404";
-import { history } from "./history";
+import { history } from "../common/history";
 import { onUnmount } from "../common/onUnmount";
 
 export const renderRouter = (elem: HTMLElement) => {

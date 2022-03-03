@@ -1,4 +1,4 @@
-import { queryParam } from "../../router/queryParam";
+import { queryParam } from "../../common/queryParam";
 import { paramNames } from "./constants";
 import { getYearFrom, getYearTo, getGraphType } from "./state";
 import { addOnMountCb } from "../../common/onUnmount";
