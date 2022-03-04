@@ -1,5 +1,9 @@
-export const graphTypes = ['precipitation', 'temperature'] as const;
-export type GraphType = typeof graphTypes[number];
+export const graphTypes = {
+  PRECIPITATION: 'precipitation',
+  TEMPERATURE: 'temperature',
+} as const;
+type Keys = keyof typeof graphTypes;
+export type GraphType = typeof graphTypes[Keys];
 
 export const paramNames = Object.freeze({
   FROM: 'from',

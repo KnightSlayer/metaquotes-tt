@@ -18,5 +18,5 @@ export const getGraphType = (paramValue = queryParam(paramNames.GRAPH).get()): G
   const defaultValue = 'temperature';
   if (!paramValue) return defaultValue;
 
-  return graphTypes.find((validKey) => validKey === paramValue) || defaultValue;
+  return Object.values(graphTypes).find((validKey) => validKey === paramValue) || defaultValue;
 }
