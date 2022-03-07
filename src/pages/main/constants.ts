@@ -24,5 +24,6 @@ export const MIN_SEGMENT_HEIGHT = 30;
 export const CANVAS_WIDTH = 900;
 export const CANVAS_HEIGHT = 450;
 export const BOTTOM_INDENTATION = 40;
-export const TOP_INDENTATION = 15;
+export const TOP_INDENTATION = 25;
 export const LEFT_INDENTATION = 35;
+export const RIGHT_INDENTATION = 15;

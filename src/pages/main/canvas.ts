@@ -1,5 +1,5 @@
 import { queryParam } from "../../common/queryParam";
-import { paramNames, CANVAS_WIDTH, CANVAS_HEIGHT, BOTTOM_INDENTATION, LEFT_INDENTATION } from "./constants";
+import { paramNames, CANVAS_WIDTH, CANVAS_HEIGHT, BOTTOM_INDENTATION, LEFT_INDENTATION, RIGHT_INDENTATION } from "./constants";
 import { getYearFrom, getYearTo, getGraphType } from "./state";
 import { addOnMountCb } from "../../common/onUnmount";
 import GraphWorker from "../../web-workers/graphWorker?worker"
@@ -17,7 +17,7 @@ const clearCanvas = (ctx: CanvasRenderingContext2D) => {
 
 const paintGrid = (ctx: CanvasRenderingContext2D, payload: PaintPayload) => {
   const { bottom, top, step, gap } = payload.y;
-  ctx.strokeStyle = 'gray';
+  ctx.strokeStyle = '#CCCCCA';
   ctx.lineWidth = 0.5;
 
   let y = CANVAS_HEIGHT - BOTTOM_INDENTATION;
@@ -30,7 +30,7 @@ const paintGrid = (ctx: CanvasRenderingContext2D, payload: PaintPayload) => {
 
     ctx.beginPath();
     ctx.moveTo(LEFT_INDENTATION, y);
-    ctx.lineTo(CANVAS_WIDTH, y);
+    ctx.lineTo(CANVAS_WIDTH - RIGHT_INDENTATION, y);
     ctx.stroke();
     y -= gap;
   }
@@ -68,7 +68,7 @@ export const initCanvas = (id: string) => {
   elem.attributes.removeNamedItem('id');
 
   elem.innerHTML = `
-    <canvas style="border: 1px solid #777">
+    <canvas style="border: 1px solid #777; width: ${CANVAS_WIDTH}px; height: ${CANVAS_HEIGHT}px;">
         Ваш браузер не поддерживает canvas
     </canvas>
     <div class="status">
@@ -78,8 +78,10 @@ export const initCanvas = (id: string) => {
 
   const canvasElem = elem.querySelector('canvas')!;
   const statusElem = elem.querySelector('.status')!;
-  canvasElem.width = CANVAS_WIDTH;
-  canvasElem.height = CANVAS_HEIGHT;
+  // use devicePixelRatio to fix blurry effect on retina
+  canvasElem.width = CANVAS_WIDTH * window.devicePixelRatio;
+  canvasElem.height = CANVAS_HEIGHT * window.devicePixelRatio;
+  canvasElem.getContext('2d')?.scale(window.devicePixelRatio, window.devicePixelRatio);
 
   function requestData() {
     if (window.location.pathname !== mainPath) return;
