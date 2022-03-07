@@ -10,8 +10,8 @@ import { GraphData } from "../../web-workers/graphWorker";
 let graphWorker = createMildTerminatedWorker(GraphWorker);
 
 const labelSuffix = {
-  [graphTypes.TEMPERATURE]: '°C',
-  [graphTypes.PRECIPITATION]: 'мм',
+  [graphTypes.TEMPERATURE]: ' °C',
+  [graphTypes.PRECIPITATION]: ' мм',
 }
 
 type PaintOptions = {

@@ -11,11 +11,11 @@ export const getDb = async (): Promise<any> => {
 
     db
       .createObjectStore(graphTypes.TEMPERATURE, { keyPath: "t" })
-      .createIndex('date_idx', 't');
+      // .createIndex('date_idx', 't');
 
     db
       .createObjectStore(graphTypes.PRECIPITATION, { keyPath: "t" })
-      .createIndex('date_idx', 't');
+      // .createIndex('date_idx', 't');
   };
 
   return new Promise((resolve, reject) => {
