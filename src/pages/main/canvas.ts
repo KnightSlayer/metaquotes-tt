@@ -1,5 +1,5 @@
 import { queryParam } from "../../common/queryParam";
-import { paramNames } from "./constants";
+import { paramNames, CANVAS_WIDTH, CANVAS_HEIGHT, BOTTOM_INDENTATION, LEFT_INDENTATION } from "./constants";
 import { getYearFrom, getYearTo, getGraphType } from "./state";
 import { addOnMountCb } from "../../common/onUnmount";
 import GraphWorker from "../../web-workers/graphWorker?worker"
@@ -9,13 +9,58 @@ import { Record } from "../../services/commonServiceFactory";
 
 let graphWorker = createMildTerminatedWorker(GraphWorker);
 
+
+const clearCanvas = (ctx: CanvasRenderingContext2D) => {
+  ctx.fillStyle = "#FFFFFA";
+  ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+}
+
+const paintGrid = (ctx: CanvasRenderingContext2D, payload: PaintPayload) => {
+  const { bottom, top, step, gap } = payload.y;
+  ctx.strokeStyle = 'gray';
+  ctx.lineWidth = 0.5;
+
+  let y = CANVAS_HEIGHT - BOTTOM_INDENTATION;
+  for (let lineValue = bottom; lineValue <= top; lineValue += step) {
+    ctx.fillStyle = "black";
+    ctx.font = "14px sans";
+    ctx.textAlign = "right"
+    ctx.textBaseline = 'middle';
+    ctx.fillText(lineValue.toString(), LEFT_INDENTATION - 5, y);
+
+    ctx.beginPath();
+    ctx.moveTo(LEFT_INDENTATION, y);
+    ctx.lineTo(CANVAS_WIDTH, y);
+    ctx.stroke();
+    y -= gap;
+  }
+}
+
+const paintAxes = () => {
+
+}
+
+const paintGraph = () => {
+
+}
+
 type PaintPayload = {
   records: Record;
-  min: number; // min value
-  max: number; // max value
+  y: {
+    bottom: number;
+    top: number;
+    step: number;
+    gap: number;
+  },
 }
-const paint = (canvas: HTMLCanvasElement, {records, min, max}: PaintPayload) => {
-  console.log('paint', canvas, records, min, max);
+const paint = (canvas: HTMLCanvasElement, payload: PaintPayload) => {
+  console.log('paint payload', payload);
+  const ctx = canvas.getContext('2d')!;
+
+  clearCanvas(ctx);
+  paintGrid(ctx, payload);
+  paintAxes();
+  paintGraph();
 }
 
 export const initCanvas = (id: string) => {
@@ -23,14 +68,18 @@ export const initCanvas = (id: string) => {
   elem.attributes.removeNamedItem('id');
 
   elem.innerHTML = `
-    <canvas></canvas>
+    <canvas style="border: 1px solid #777">
+        Ваш браузер не поддерживает canvas
+    </canvas>
     <div class="status">
-        Loading
+        Loading...
     </div>
   `;
 
   const canvasElem = elem.querySelector('canvas')!;
   const statusElem = elem.querySelector('.status')!;
+  canvasElem.width = CANVAS_WIDTH;
+  canvasElem.height = CANVAS_HEIGHT;
 
   function requestData() {
     if (window.location.pathname !== mainPath) return;
@@ -56,13 +105,13 @@ export const initCanvas = (id: string) => {
     });
 
   graphWorker.onmessage = (e) => {
-    const {error, records, min, max} = e.data;
+    const {error, ...payload} = e.data;
 
     if (error) {
       statusElem.innerHTML = `Error: ${error}`;
     } else {
       statusElem.innerHTML = "";
-      paint(canvasElem, {records, min, max});
+      paint(canvasElem, payload);
     }
   }
 }

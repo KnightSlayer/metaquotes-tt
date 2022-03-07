@@ -32,7 +32,6 @@ export const renderMain = (elem: HTMLElement) => {
         <div id="${canvasElemId}">
 
         </div>
-<!--        <canvas></canvas>-->
       </div>
     </div>
   `
