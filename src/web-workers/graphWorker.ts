@@ -41,7 +41,10 @@ type GraphDataPiece = {
 export type GraphData = {
   data: Array<GraphDataPiece>,
   x: {},
-  y: {},
+  y: Array<{
+    value: number,
+    label: string,
+  }>,
 }
 
 // this method also mutates records by adding `y` property to each record
@@ -72,8 +75,20 @@ const getYData = (records: Array<GraphDataPiece>) => {
     data.y = CANVAS_HEIGHT - BOTTOM_INDENTATION - (data.value - bottom) * pixelsInUnit;
   })
 
+  const y: GraphData["y"] = [];
   // @ts-ignore
-  return { bottom, top, step, gap: drawHeight / segmentsCount };
+  let value = bottom;
+  let yValue = CANVAS_HEIGHT - BOTTOM_INDENTATION;
+  // @ts-ignore
+  while (value <= top) {
+    y.push({
+      value: yValue,
+      label: value.toString(),
+    });
+    value += step;
+    yValue -= gap;
+  }
+  return y;
 }
 const getXData = (records: Array<GraphDataPiece>) => {
   const drawWidth = CANVAS_WIDTH - LEFT_INDENTATION - RIGHT_INDENTATION;

@@ -1,5 +1,5 @@
 import { queryParam } from "../../common/queryParam";
-import { paramNames, CANVAS_WIDTH, CANVAS_HEIGHT, BOTTOM_INDENTATION, LEFT_INDENTATION, RIGHT_INDENTATION } from "./constants";
+import { paramNames, CANVAS_WIDTH, CANVAS_HEIGHT, LEFT_INDENTATION, RIGHT_INDENTATION } from "./constants";
 import { getYearFrom, getYearTo, getGraphType } from "./state";
 import { addOnMountCb } from "../../common/onUnmount";
 import GraphWorker from "../../web-workers/graphWorker?worker"
@@ -16,24 +16,21 @@ const clearCanvas = (ctx: CanvasRenderingContext2D) => {
 }
 
 const paintGrid = (ctx: CanvasRenderingContext2D, payload: GraphData) => {
-  const { bottom, top, step, gap } = payload.y;
   ctx.strokeStyle = '#CCCCCA';
   ctx.lineWidth = 0.5;
+  ctx.fillStyle = "black";
+  ctx.font = "14px sans";
+  ctx.textAlign = "right"
+  ctx.textBaseline = 'middle';
 
-  let y = CANVAS_HEIGHT - BOTTOM_INDENTATION;
-  for (let lineValue = bottom; lineValue <= top; lineValue += step) {
-    ctx.fillStyle = "black";
-    ctx.font = "14px sans";
-    ctx.textAlign = "right"
-    ctx.textBaseline = 'middle';
-    ctx.fillText(lineValue.toString(), LEFT_INDENTATION - 5, y);
+  payload.y.forEach(({ value, label}) => {
+    ctx.fillText(label, LEFT_INDENTATION - 5, value);
 
     ctx.beginPath();
-    ctx.moveTo(LEFT_INDENTATION, y);
-    ctx.lineTo(CANVAS_WIDTH - RIGHT_INDENTATION, y);
+    ctx.moveTo(LEFT_INDENTATION, value);
+    ctx.lineTo(CANVAS_WIDTH - RIGHT_INDENTATION, value);
     ctx.stroke();
-    y -= gap;
-  }
+  });
 }
 
 const paintAxes = () => {
