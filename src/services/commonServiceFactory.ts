@@ -12,7 +12,7 @@ type Arg = {
 
 export function commonServiceFactory({entityName, fetcher}: Arg) {
   return {
-    async get({from, to}: {from: string, to: string}) {
+    async get({from, to}: {from: string, to: string}): Promise<Array<Record>> {
       const db = await getDb();
       const isEmpty = await isStoreEmpty({db, storeName: entityName});
 

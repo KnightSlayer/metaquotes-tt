@@ -5,7 +5,7 @@ import { addOnMountCb } from "../../common/onUnmount";
 import GraphWorker from "../../web-workers/graphWorker?worker"
 import { mainPath } from "./index";
 import { createMildTerminatedWorker } from "../../common/createMildTerminatedWorker";
-import { Record } from "../../services/commonServiceFactory";
+import { GraphData } from "../../web-workers/graphWorker";
 
 let graphWorker = createMildTerminatedWorker(GraphWorker);
 
@@ -15,7 +15,7 @@ const clearCanvas = (ctx: CanvasRenderingContext2D) => {
   ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 }
 
-const paintGrid = (ctx: CanvasRenderingContext2D, payload: PaintPayload) => {
+const paintGrid = (ctx: CanvasRenderingContext2D, payload: GraphData) => {
   const { bottom, top, step, gap } = payload.y;
   ctx.strokeStyle = '#CCCCCA';
   ctx.lineWidth = 0.5;
@@ -37,30 +37,29 @@ const paintGrid = (ctx: CanvasRenderingContext2D, payload: PaintPayload) => {
 }
 
 const paintAxes = () => {
-
+  // do I really need it?
 }
 
-const paintGraph = () => {
+const paintGraph = (ctx: CanvasRenderingContext2D, payload: GraphData) => {
+  const { data } = payload;
 
+  ctx.beginPath();
+  ctx.strokeStyle = 'green';
+  ctx.moveTo(data[0].x, data[0].y);
+  for (let i = 1; i < data.length; i++) {
+    ctx.lineTo(data[i].x, data[i].y);
+  }
+  ctx.stroke();
 }
 
-type PaintPayload = {
-  records: Record;
-  y: {
-    bottom: number;
-    top: number;
-    step: number;
-    gap: number;
-  },
-}
-const paint = (canvas: HTMLCanvasElement, payload: PaintPayload) => {
+const paint = (canvas: HTMLCanvasElement, payload: GraphData) => {
   console.log('paint payload', payload);
   const ctx = canvas.getContext('2d')!;
 
   clearCanvas(ctx);
   paintGrid(ctx, payload);
   paintAxes();
-  paintGraph();
+  paintGraph(ctx, payload);
 }
 
 export const initCanvas = (id: string) => {
