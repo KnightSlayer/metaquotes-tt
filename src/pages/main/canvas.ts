@@ -1,5 +1,5 @@
 import { queryParam } from "../../common/queryParam";
-import { paramNames, CANVAS_WIDTH, CANVAS_HEIGHT, LEFT_INDENTATION, RIGHT_INDENTATION } from "./constants";
+import { graphTypes, paramNames, CANVAS_WIDTH, CANVAS_HEIGHT, LEFT_INDENTATION, RIGHT_INDENTATION } from "./constants";
 import { getYearFrom, getYearTo, getGraphType } from "./state";
 import { addOnMountCb } from "../../common/onUnmount";
 import GraphWorker from "../../web-workers/graphWorker?worker"
@@ -9,13 +9,21 @@ import { GraphData } from "../../web-workers/graphWorker";
 
 let graphWorker = createMildTerminatedWorker(GraphWorker);
 
+const labelSuffix = {
+  [graphTypes.TEMPERATURE]: '°C',
+  [graphTypes.PRECIPITATION]: 'мм',
+}
+
+type PaintOptions = {
+  yLabel?: (v:string) => string
+}
 
 const clearCanvas = (ctx: CanvasRenderingContext2D) => {
   ctx.fillStyle = "#FFFFFA";
   ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 }
 
-const paintGrid = (ctx: CanvasRenderingContext2D, payload: GraphData) => {
+const paintGrid = (ctx: CanvasRenderingContext2D, payload: GraphData, options: PaintOptions) => {
   ctx.strokeStyle = '#CCCCCA';
   ctx.lineWidth = 0.5;
   ctx.fillStyle = "black";
@@ -23,8 +31,9 @@ const paintGrid = (ctx: CanvasRenderingContext2D, payload: GraphData) => {
   ctx.textAlign = "right"
   ctx.textBaseline = 'middle';
 
+  const yLabel = options.yLabel || (v => v);
   payload.y.forEach(({ value, label}) => {
-    ctx.fillText(label, LEFT_INDENTATION - 5, value);
+    ctx.fillText(yLabel(label), LEFT_INDENTATION - 5, value);
 
     ctx.beginPath();
     ctx.moveTo(LEFT_INDENTATION, value);
@@ -49,12 +58,12 @@ const paintGraph = (ctx: CanvasRenderingContext2D, payload: GraphData) => {
   ctx.stroke();
 }
 
-const paint = (canvas: HTMLCanvasElement, payload: GraphData) => {
+const paint = (canvas: HTMLCanvasElement, payload: GraphData, options: PaintOptions) => {
   console.log('paint payload', payload);
   const ctx = canvas.getContext('2d')!;
 
   clearCanvas(ctx);
-  paintGrid(ctx, payload);
+  paintGrid(ctx, payload, options);
   paintAxes();
   paintGraph(ctx, payload);
 }
@@ -109,7 +118,7 @@ export const initCanvas = (id: string) => {
       statusElem.innerHTML = `Error: ${error}`;
     } else {
       statusElem.innerHTML = "";
-      paint(canvasElem, payload);
+      paint(canvasElem, payload, {yLabel: (v) => v + labelSuffix[getGraphType()]});
     }
   }
 }
