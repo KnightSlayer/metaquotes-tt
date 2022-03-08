@@ -79,7 +79,6 @@ const paintGraph = (ctx: CanvasRenderingContext2D, payload: GraphData) => {
 }
 
 const paint = (canvas: HTMLCanvasElement, payload: GraphData, options: PaintOptions) => {
-  console.log('paint payload', payload);
   const ctx = canvas.getContext('2d')!;
 
   clearCanvas(ctx);

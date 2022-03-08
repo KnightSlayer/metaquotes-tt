@@ -34,7 +34,7 @@ export const getDb = async (): Promise<any> => {
         alert("The database is out of date, please reload the page.")
       };
       db.onerror = (event: any) => {
-        // Generic error handler for all errors targeted at this database's requests!
+        // Generic error handler for all errors targeted at this database's requests
         console.error("Database error: " + event.target.errorCode);
       };
 
