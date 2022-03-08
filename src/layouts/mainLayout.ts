@@ -1,5 +1,6 @@
 import { history } from "../common/history";
 import { myUuid } from "../utils";
+import telegramLogo from '../telegram_logo.png';
 
 type Render = ((elem: HTMLElement) => void) | undefined;
 type SlotName = "main" | "footer";
@@ -27,15 +28,21 @@ export const renderMainLayout = (elem: HTMLElement, slots: Slots) => {
     <header>
       <h1> This is Edgar Abgaryan's test task </h1>
       <nav>
-        <a href="/">Main</a>
-        <a href="/about">About</a>
+        <a href="/">Главная</a>
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        <a href="/about">О задаче</a>
       </nav>
     </header>
 
     <main id="${slotRenderMap.main}"></main>
 
     <footer>
-      <a href="https://t.me/eabgaryan" target="_blank"> Contact me in telegram </a>
+      <a href="https://t.me/eabgaryan" target="_blank">
+        Contact me in telegram
+        <img src=${telegramLogo} alt="telegram logo" />
+      </a>
       <div id="${slotRenderMap.footer}"></div>
     </footer>
   `;
