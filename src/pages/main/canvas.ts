@@ -1,5 +1,14 @@
 import { queryParam } from "../../common/queryParam";
-import { graphTypes, paramNames, CANVAS_WIDTH, CANVAS_HEIGHT, LEFT_INDENTATION, RIGHT_INDENTATION } from "./constants";
+import {
+  graphTypes,
+  paramNames,
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
+  LEFT_INDENTATION,
+  RIGHT_INDENTATION,
+  BOTTOM_INDENTATION,
+  TOP_INDENTATION,
+} from "./constants";
 import { getYearFrom, getYearTo, getGraphType } from "./state";
 import { addOnMountCb } from "../../common/onUnmount";
 import GraphWorker from "../../web-workers/graphWorker?worker"
@@ -36,8 +45,19 @@ const paintGrid = (ctx: CanvasRenderingContext2D, payload: GraphData, options: P
     ctx.fillText(yLabel(label), LEFT_INDENTATION - 5, value);
 
     ctx.beginPath();
-    ctx.moveTo(LEFT_INDENTATION, value);
-    ctx.lineTo(CANVAS_WIDTH - RIGHT_INDENTATION, value);
+    ctx.moveTo(LEFT_INDENTATION - 4, value);
+    ctx.lineTo(CANVAS_WIDTH - RIGHT_INDENTATION + 4, value);
+    ctx.stroke();
+  });
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  payload.x.forEach(({ value, label}) => {
+    ctx.fillText(label, value, CANVAS_HEIGHT - BOTTOM_INDENTATION + 9);
+
+    ctx.beginPath();
+    ctx.moveTo(value, CANVAS_HEIGHT - BOTTOM_INDENTATION + 4);
+    ctx.lineTo(value, TOP_INDENTATION - 4);
     ctx.stroke();
   });
 }

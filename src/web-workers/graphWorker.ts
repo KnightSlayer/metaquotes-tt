@@ -10,12 +10,27 @@ import {
   RIGHT_INDENTATION,
   CANVAS_WIDTH,
   MIN_X_STEP,
+  X_THRESHOLDS_COUNT,
 } from "../pages/main/constants";
 import { temperatureService } from "../services/temperatureService";
 import { precipitationService } from "../services/precipitationService";
 import { commonServiceFactory } from "../services/commonServiceFactory";
 import { splitArrayIntoChunks } from "../common/splitArrayIntoChunks";
 
+const monthMap = {
+  '01': 'Jan',
+  '02': 'Feb',
+  '03': 'Mar',
+  '04': 'Apr',
+  '05': 'May',
+  '06': 'Jun',
+  '07': 'Jul',
+  '08': 'Aug',
+  '09': 'Sep',
+  '10': 'Oct',
+  '11': 'Nov',
+  '12': 'Dec',
+}
 
 type ServiceMap = {
   [key in GraphType]: ReturnType<typeof commonServiceFactory>;
@@ -40,7 +55,10 @@ type GraphDataPiece = {
 
 export type GraphData = {
   data: Array<GraphDataPiece>,
-  x: {},
+  x: Array<{
+    value: number,
+    label: string,
+  }>,
   y: Array<{
     value: number,
     label: string,
@@ -96,9 +114,23 @@ const getXData = (records: Array<GraphDataPiece>) => {
   const pixelsInUnit = drawWidth / (records.length - 1); // records.length > 1 always
   records.forEach((data, index) => {
     data.x = LEFT_INDENTATION + index * pixelsInUnit;
-  })
+  });
 
-  return {}
+  let xData: GraphData["x"] = [];
+  for (let i = 0; i <= X_THRESHOLDS_COUNT; i++) {
+    const index = Math.round(i * (records.length - 1) / X_THRESHOLDS_COUNT);
+    const { x, label } = records[index];
+    const [year, month] = label.split('-');
+
+
+    xData.push({
+      value: x,
+      // @ts-ignore
+      label: `${monthMap[month]} ${year}`,
+    })
+  }
+
+  return xData;
 }
 
 // const findAbsMaxIndex = (arr: Array<number>): number => {

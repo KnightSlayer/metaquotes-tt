@@ -4,7 +4,6 @@ import { queryParam } from "../../common/queryParam";
 import { addOnMountCb } from "../../common/onUnmount";
 
 
-
 type Props = {
   onChange: (v: string) => void,
   sync: ReturnType<typeof queryParam>['sync'],
