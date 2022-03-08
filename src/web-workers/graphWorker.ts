@@ -133,21 +133,6 @@ const getXData = (records: Array<GraphDataPiece>) => {
   return xData;
 }
 
-// const findAbsMaxIndex = (arr: Array<number>): number => {
-//   let index = -1;
-//   let localMax = -1;
-//
-//   for (let i = 0; i < arr.length; i++ ) {
-//     const abs = Math.abs(arr[i]);
-//     if (abs > localMax) {
-//       localMax = abs;
-//       index = i;
-//     }
-//   }
-//
-//   return index;
-// }
-
 onmessage = async function(e) {
   const { from, to, graph }: MessagePayload = e.data;
 

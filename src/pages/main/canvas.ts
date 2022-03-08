@@ -62,10 +62,6 @@ const paintGrid = (ctx: CanvasRenderingContext2D, payload: GraphData, options: P
   });
 }
 
-const paintAxes = () => {
-  // do I really need it?
-}
-
 const paintGraph = (ctx: CanvasRenderingContext2D, payload: GraphData) => {
   const { data } = payload;
 
@@ -83,7 +79,6 @@ const paint = (canvas: HTMLCanvasElement, payload: GraphData, options: PaintOpti
 
   clearCanvas(ctx);
   paintGrid(ctx, payload, options);
-  paintAxes();
   paintGraph(ctx, payload);
 }
 
