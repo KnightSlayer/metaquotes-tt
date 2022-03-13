@@ -165,7 +165,7 @@ onmessage = async function(e) {
       }));
     const y = getYData(data);
     const x = getXData(data);
-    console.log('data', data);
+    // console.log('data', data);
 
     const message: GraphData = {data, y, x};
 

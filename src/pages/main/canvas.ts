@@ -111,7 +111,7 @@ export const initCanvas = (id: string) => {
     const to = getYearTo();
     const graph = getGraphType();
 
-    graphWorker.terminate();
+    // graphWorker.terminate();
     // я хотел менять from и to местами если from > to (так как это был бы хороший UX)
     // но решил оставить так, чтобы был способ легко генерировать и обрабатывать ошибку
     graphWorker.postMessage({from, to, graph});
